@@ -1,0 +1,114 @@
+
+
+
+// Fragment adapter work
+
+
+public class MyAdapter extends FragmentPagerAdapter {
+
+    int tabcount;
+    public MyAdapter(@NonNull  FragmentManager fm, int behavior) {
+        super(fm, behavior);
+        tabcount = behavior;
+    }
+
+    @NonNull
+    @Override
+    public Fragment getItem(int position) {
+
+        switch (position){
+            case 0 : return new Fragment_1();
+            case 1 : return new Fragment_2();
+        }
+
+
+        return null;
+    }
+
+    @Override
+    public int getCount() {
+        return tabcount;
+    }
+}
+
+//HomeActivity ActionToggleBar & adapter impliments and show Fragment
+
+public class HomeActivity extends AppCompatActivity {
+
+    TabLayout tablayout;
+    NavigationView navigation;
+    TabItem home,chet1;
+    ViewPager viewpager;
+    DrawerLayout drayerlayout;
+    ActionBarDrawerToggle toggle;
+    MyAdapter adapter;
+
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home);
+
+        tablayout = findViewById(R.id.tablayout);
+        navigation = findViewById(R.id.navigation);
+        home = findViewById(R.id.home1);
+        chet1 = findViewById(R.id.chet1);
+        viewpager = findViewById(R.id.viewpager);
+        drayerlayout = findViewById(R.id.drayerlayout);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+    adapter = new MyAdapter(getSupportFragmentManager(),tablayout.getTabCount());
+    viewpager.setAdapter(adapter);
+    tablayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            viewpager.setCurrentItem(tab.getPosition());
+           if (tab.getPosition()==0 || tab.getPosition()==1);
+           adapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+
+        }
+    });
+    viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tablayout));
+
+
+
+
+        toggle = new ActionBarDrawerToggle(this,drayerlayout,toolbar,R.string.open,R.string.close);
+        drayerlayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+// menu click here 
+
+        navigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull  MenuItem item) {
+
+                if (item.getItemId()==R.id.upload1){
+                    Intent intent = new Intent(getApplicationContext(),UploadActivity.class);
+                    startActivity(intent);
+                    drayerlayout.closeDrawer(GravityCompat.START);
+                }
+
+
+
+                return true;
+            }
+        });
+
+    }
+
+
+}
+
